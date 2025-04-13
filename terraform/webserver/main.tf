@@ -53,3 +53,35 @@ resource "aws_instance" "webservers" {
     count.index > 1 ? { Owner = "acs730" } : {}
   )
 }
+
+# DB Server 5 (Private)
+resource "aws_instance" "db_server5" {
+  ami                    = data.aws_ami.latest_amazon_linux.id
+  instance_type          = var.instance_type
+  key_name               = aws_key_pair.deployer.key_name
+  vpc_security_group_ids = [aws_security_group.private.id]
+  subnet_id              = data.terraform_remote_state.network.outputs.private_subnet_ids[0]
+
+  user_data = base64encode(templatefile("${path.module}/install_db.sh", {
+    env = var.env
+  }))
+
+  tags = {
+    Name = "DB Server 5"
+  }
+}
+
+
+# VM6 (Private)
+resource "aws_instance" "VM6" {
+  ami                    = data.aws_ami.latest_amazon_linux.id
+  instance_type          = var.instance_type
+  key_name               = aws_key_pair.deployer.key_name
+  vpc_security_group_ids = [aws_security_group.private.id]
+  subnet_id              = data.terraform_remote_state.network.outputs.private_subnet_ids[1]
+
+
+  tags = {
+    Name = "VM6 (Private)"
+  }
+}
