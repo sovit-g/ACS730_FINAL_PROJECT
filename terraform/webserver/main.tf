@@ -85,3 +85,50 @@ resource "aws_instance" "VM6" {
     Name = "VM6 (Private)"
   }
 }
+
+# Application Load Balancer
+resource "aws_lb" "webserver" {
+  name               = "${var.prefix}-${var.env}-webserver-alb"
+  internal           = false
+  load_balancer_type = "application"
+  security_groups    = [aws_security_group.alb.id]
+  subnets            = data.terraform_remote_state.network.outputs.public_subnet_ids
+
+  tags = {
+    Name = "${var.prefix}-${var.env}-webserver-alb"
+  }
+}
+
+# ALB listener
+resource "aws_lb_listener" "webserver" {
+  load_balancer_arn = aws_lb.webserver.arn
+  port              = "80"
+  protocol          = "HTTP"
+
+  default_action {
+    type             = "forward"
+    target_group_arn = aws_lb_target_group.webserver.arn
+  }
+}
+
+# ALB target group
+resource "aws_lb_target_group" "webserver" {
+  name     = "${var.prefix}-${var.env}-webserver-tg"
+  port     = 80
+  protocol = "HTTP"
+  vpc_id   = data.terraform_remote_state.network.outputs.vpc_id
+
+  health_check {
+    path                = "/"
+    healthy_threshold   = 2
+    unhealthy_threshold = 10
+  }
+}
+
+# Target group attachments
+resource "aws_lb_target_group_attachment" "webserver" {
+  count            = 2
+  target_group_arn = aws_lb_target_group.webserver.arn
+  target_id        = aws_instance.webservers[count.index].id
+  port             = 80
+}
