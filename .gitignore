@@ -9,3 +9,4 @@ crash.log
 *.key
 *.tfvars
 .terraform/
+.c9/metadata/environment/.gitignore
