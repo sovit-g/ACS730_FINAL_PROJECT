@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>ACS730 Final Project Webserver</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+        }
+        img {
+            width: 50%;
+            height: auto;
+            margin-top: 20px;
+        }
+    </style>
+</head>
+<body>
+
+    <h1>Configured by Ansible as part of ACS730 Final Group Project</h1>
+    <p><strong>Group Members:</strong> Sovit, Lokesh, Rahul, and Pujan</p>
+    <p><strong>Environment:</strong> {{ env }}</p>
+    <p><strong>Public IP:</strong> {{ ansible_default_ipv4.address }}</p>
+    <p><strong>Hostname:</strong> {{ ansible_hostname }}</p>
+    <img src="Project_Architecture_Diagram.png" alt="Architecture Diagram">
+
+</body>
+</html>
