@@ -103,10 +103,11 @@ jobs:
         
       - name: Debug - Check for access_key.pub
         run: |
+          echo "Current directory: $(pwd)"
           echo "Listing files:"
           ls -al
           echo "Trying to cat the key:"
-          cat access_key.pub || echo "cess_key.pub NOT FOUND"
+          cat access_key.pub || echo "access_key.pub NOT FOUND"
         working-directory: terraform/webserver
 
       - name: Terraform Validate (Webserver)
