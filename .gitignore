@@ -11,4 +11,5 @@ crash.log
 .terraform/
 .c9/metadata/environment/.gitignore
 .c9/metadata/
+access_key
 
