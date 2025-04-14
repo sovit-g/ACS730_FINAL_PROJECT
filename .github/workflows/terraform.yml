@@ -77,6 +77,9 @@ jobs:
     steps:
       - name: Checkout code
         uses: actions/checkout@v3
+        with:
+          fetch-depth: 0
+          lfs: true
 
       - name: Set up AWS CLI
         uses: aws-actions/configure-aws-credentials@v2
@@ -96,6 +99,14 @@ jobs:
 
       - name: Terraform Init (Webserver)
         run: terraform init
+        working-directory: terraform/webserver
+        
+      - name: Debug - Check for access_key.pub
+        run: |
+          echo "Listing files:"
+          ls -al
+          echo "Trying to cat the key:"
+          cat access_key.pub || echo "cess_key.pub NOT FOUND"
         working-directory: terraform/webserver
 
       - name: Terraform Validate (Webserver)
